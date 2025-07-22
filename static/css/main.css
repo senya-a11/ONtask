@@ -1,0 +1,116 @@
+/* HEADER */
+
+body{
+    margin: 0;
+}
+
+*,
+*before,
+*after{
+    box-sizing: border-box;
+}
+
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 15px;
+    background: #fff;
+
+}
+
+.page {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content {
+    max-width: 100vh;
+    margin: 0 auto
+    padding: 40px 20px;
+
+    flex: 1 1 auto;
+}
+
+
+.header__img {
+    height: 64px;
+    width: 64px;
+}
+
+/* MAIN PAGE */
+.dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+    font-weight: 400;
+    color: #2c3e50;
+}
+
+.task-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.task {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.task:hover {
+    transform: translateY(-5px);
+}
+
+.task-priority {
+    height: 5px;
+    background: #42b983;
+}
+
+.task-body {
+    padding: 1.5rem;
+}
+
+.task-body h3 {
+    margin: 0 0 1rem;
+    color: #2c3e50;
+}
+
+.task-body p {
+    color: #7f8c8d;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.task-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background: #f9f9f9;
+    font-size: 0.85rem;
+    color: #95a5a6;
+}
+
+.btn-filter {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+}

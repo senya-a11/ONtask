@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard">
+    <header class="dashboard-header">
+        <h1>Рабочие задачи</h1>
+        <div class="dashboard-actions">
+            <button class="btn-filter">Фильтр</button>
+        </div>
+    </header>
+
+    <div class="task-board">
+        {% for item in news %}
+        <article class="task">
+            <div class="task-priority"></div>
+            <div class="task-body">
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.content }}</p>
+            </div>
+            <footer class="task-footer">
+                <span class="task-author">Менеджер</span>
+                <span class="task-date">12:30</span>
+            </footer>
+        </article>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

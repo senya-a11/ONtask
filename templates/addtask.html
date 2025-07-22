@@ -1,0 +1,19 @@
+{%extends "base.html" %}
+
+{% block title %}
+Addtask
+{% endblock %}
+
+{% block content %}
+<h1>Where you can add some tasks for your team</h1>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <form method="post" class="form-controll">
+            <input type="text" name="title" placeholder="Write the title to your task..." class="form-controll"><br>
+            <input type="text" name="task" placeholder="Write some task..." class="form-controll"><br>
+            <button class="btn btn-success" type="submit">Add task</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
