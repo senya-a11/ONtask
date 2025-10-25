@@ -22,9 +22,8 @@ def get_db_connection():
             print(f"Ошибка подключения к БД: {e}")
             return None
 
-@app.route("/main")
-@app.route("/")
-def main():
+@app.route("/tasks")
+def tasks():
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=DictCursor)
 
@@ -35,7 +34,13 @@ def main():
     cur.close()
     conn.close()
 
-    return render_template("main.html", news=news)
+    return render_template("tasks.html", news=news)
+
+@app.route("/main")
+@app.route("/")
+def main():
+
+    return render_template("main.html")
 
 @app.route("/about")
 def about():
