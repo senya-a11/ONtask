@@ -8,23 +8,33 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 
+from urllib.parse import urlparse
+
 
 def get_db_connection():
     try:
-        conn = psycopg2.connect(
-            host=os.environ["host"],
-            user=os.environ["user"],
-            password=os.environ["password"],
-            port=os.environ["port"],
-            dbname=os.environ["dbname"],
-            client_encoding='utf-8'
-        )
+        # Получаем DATABASE_URL из переменных окружения Render
+        database_url = os.environ.get('DATABASE_URL')
+
+        if database_url:
+            # Исправляем для совместимости с psycopg2
+            if database_url.startswith('postgres://'):
+                database_url = database_url.replace('postgres://', 'postgresql://', 1)
+
+            conn = psycopg2.connect(database_url, sslmode='require')
+        else:
+            # Локальная разработка
+            conn = psycopg2.connect(
+                host=os.environ.get("host", "localhost"),
+                user=os.environ.get("user", "postgres"),
+                password=os.environ.get("password", ""),
+                port=os.environ.get("port", "5432"),
+                dbname=os.environ.get("dbname", "flask_db"),
+                client_encoding='utf-8'
+            )
         return conn
-    except psycopg2.OperationalError as e:
+    except Exception as e:
         print(f"Ошибка подключения к БД: {e}")
-        return None
-    except KeyError as e:
-        print(f"Отсутствует переменная окружения: {e}")
         return None
 
 
