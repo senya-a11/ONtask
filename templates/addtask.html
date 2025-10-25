@@ -1,71 +1,122 @@
 {% extends "base.html" %}
 
-{% block title %}
-Добавить задачу
-{% endblock %}
+{% block title %}Добавить задачу{% endblock %}
 
 {% block content %}
-<div class="addtask-container">
-    <div class="addtask-card">
-        <div class="addtask-header">
-            <h1>Добавить новую задачу</h1>
-            <p>Создайте задачу для вашей команды</p>
+<div class="addtask-fullpage">
+    <div class="addtask-centered">
+        <div class="addtask-card">
+            <div class="addtask-header">
+                <h1>Новая задача</h1>
+                <p>Создайте задачу для команды</p>
+            </div>
+
+            <form method="post" class="addtask-form">
+                <div class="form-group">
+                    <label for="title">Название задачи</label>
+                    <input type="text" id="title" name="title"
+                           placeholder="Введите название задачи..." required>
+                </div>
+
+                <div class="form-group">
+                    <label for="task">Описание задачи</label>
+                    <textarea id="task" name="task"
+                              placeholder="Опишите детали задачи..."
+                              rows="5" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="assigned_to">Исполнитель</label>
+                        <select id="assigned_to" name="assigned_to">
+                            <option value="">Не назначать</option>
+                            {% for user in users %}
+                            <option value="{{ user.id }}">{{ user.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="deadline">Дедлайн</label>
+                        <input type="date" id="deadline" name="deadline">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="create-task-btn">
+                        <span class="btn-icon">📋</span>
+                        <span class="btn-text">Создать задачу</span>
+                        <span class="btn-arrow">→</span>
+                    </button>
+                    <a href="/tasks" class="cancel-btn">Отмена</a>
+                </div>
+            </form>
         </div>
-
-        <form method="post" class="addtask-form">
-            <div class="form-group">
-                <label for="title">Название задачи</label>
-                <input type="text" id="title" name="title" placeholder="Например: Разработать новый функционал" required>
-            </div>
-
-            <div class="form-group">
-                <label for="task">Описание задачи</label>
-                <textarea id="task" name="task" placeholder="Опишите детали задачи, сроки и требования..." rows="4" required></textarea>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn-primary">
-                    <span>➕ Создать задачу</span>
-                </button>
-                <a href="/tasks" class="btn-secondary">Отмена</a>
-            </div>
-        </form>
     </div>
 </div>
 
 <style>
-.addtask-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-    min-height: 80vh;
+/* Фон на всю страницу */
+.addtask-fullpage {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     display: flex;
     align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    width: 100%;
+    margin: 0;
 }
 
+/* Центрирующий контейнер */
+.addtask-centered {
+    width: 100%;
+    max-width: 1200px; /* Ограничиваем максимальную ширину, но не минимальную */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+/* Карточка формы */
 .addtask-card {
     background: white;
-    border-radius: 16px;
-    padding: 2.5rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     width: 100%;
+    max-width: 600px; /* Только форма ограничена по ширине */
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Остальные стили остаются прежними */
+.addtask-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
 }
 
 .addtask-header {
     text-align: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
 }
 
 .addtask-header h1 {
     font-size: 1.75rem;
     font-weight: 600;
-    color: #1a1a1a;
+    color: #2c3e50;
     margin-bottom: 0.5rem;
 }
 
 .addtask-header p {
-    color: #666;
+    color: #7f8c8d;
     font-size: 1rem;
 }
 
@@ -73,102 +124,175 @@
     margin-bottom: 1.5rem;
 }
 
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
-    color: #333;
+    color: #2c3e50;
     font-size: 0.95rem;
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
     width: 100%;
     padding: 0.75rem 1rem;
     border: 2px solid #e1e5e9;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 1rem;
-    transition: all 0.2s ease;
-    background: #fafbfc;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
     font-family: inherit;
 }
 
 .form-group input:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-group select:focus {
     outline: none;
-    border-color: #4361ee;
+    border-color: #667eea;
     background: white;
-    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
 }
 
 .form-group textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 120px;
+    font-family: inherit;
 }
 
 .form-actions {
     display: flex;
     gap: 1rem;
-    margin-top: 2rem;
+    margin-top: 2.5rem;
 }
 
-.btn-primary {
-    background: #4361ee;
+.create-task-btn {
+    flex: 1;
+    background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 500;
+    padding: 1.2rem 2rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
-    flex: 1;
+    transition: all 0.4s ease;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
 }
 
-.btn-primary:hover {
-    background: #3a56d4;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+.create-task-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s;
 }
 
-.btn-secondary {
+.create-task-btn:hover::before {
+    left: 100%;
+}
+
+.create-task-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+}
+
+.btn-icon {
+    font-size: 1.3rem;
+    transition: transform 0.3s ease;
+}
+
+.btn-text {
+    letter-spacing: 0.5px;
+}
+
+.btn-arrow {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.create-task-btn:hover .btn-arrow {
+    transform: translateX(5px);
+}
+
+.create-task-btn:hover .btn-icon {
+    transform: scale(1.1);
+}
+
+.cancel-btn {
     background: #f8f9fa;
-    color: #666;
+    color: #7f8c8d;
     border: 2px solid #e1e5e9;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-size: 1rem;
+    padding: 1.2rem 2rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
     font-weight: 500;
     text-decoration: none;
     text-align: center;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     flex: 0.5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.btn-secondary:hover {
-    background: #e9ecef;
-    border-color: #ced4da;
+.cancel-btn:hover {
+    background: white;
+    border-color: #667eea;
+    color: #667eea;
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
 }
 
-/* Адаптивность для мобильных */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.addtask-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
 @media (max-width: 768px) {
-    .addtask-container {
+    .addtask-fullpage {
         padding: 1rem;
     }
 
     .addtask-card {
         padding: 2rem 1.5rem;
+        margin: 1rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
     }
 
     .form-actions {
         flex-direction: column;
     }
 
-    .btn-secondary {
+    .cancel-btn {
         flex: 1;
     }
 }

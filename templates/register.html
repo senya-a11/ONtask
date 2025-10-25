@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-icon">👥</div>
+            <h1>Присоединиться к команде</h1>
+            <p>Создайте аккаунт для управления задачами</p>
+        </div>
+
+        <form method="post" class="auth-form">
+            <div class="form-group">
+                <label for="username">Имя пользователя</label>
+                <div class="input-with-icon">
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="username" name="username"
+                           placeholder="Введите ваше имя" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Пароль</label>
+                <div class="input-with-icon">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="password" name="password"
+                           placeholder="Создайте надежный пароль" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="role">Роль в команде</label>
+                <div class="input-with-icon">
+                    <span class="input-icon">🎯</span>
+                    <select id="role" name="role" required>
+                        <option value="">Выберите роль</option>
+                        <option value="team_leader">Team Leader</option>
+                        <option value="crew">Crew Member</option>
+                    </select>
+                </div>
+                <div class="role-description">
+                    <div class="role-info" data-role="team_leader">
+                        <strong>Team Leader:</strong> Может создавать и назначать задачи
+                    </div>
+                    <div class="role-info" data-role="crew">
+                        <strong>Crew Member:</strong> Выполняет назначенные задачи
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="auth-btn-primary">
+                <span>🚀 Зарегистрироваться</span>
+            </button>
+
+            <div class="auth-links">
+                <p>Уже есть аккаунт? <a href="/login" class="auth-link">Войти</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.auth-container {
+    max-width: 440px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+}
+
+.auth-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    width: 100%;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.auth-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.auth-header h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.auth-header p {
+    color: #7f8c8d;
+    font-size: 1rem;
+}
+
+.auth-form .form-group {
+    margin-bottom: 1.8rem;
+}
+
+.auth-form .form-group label {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 0.95rem;
+}
+
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    font-size: 1.1rem;
+    z-index: 2;
+}
+
+.auth-form .form-group input,
+.auth-form .form-group select {
+    width: 100%;
+    padding: 0.9rem 1rem 0.9rem 3rem;
+    border: 2px solid #e1e5e9;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background: #f8f9fa;
+    font-family: inherit;
+}
+
+.auth-form .form-group input:focus,
+.auth-form .form-group select:focus {
+    outline: none;
+    border-color: #3498db;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.role-description {
+    margin-top: 0.8rem;
+}
+
+.role-info {
+    padding: 0.8rem;
+    border-radius: 8px;
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+    font-size: 0.9rem;
+    color: #5a6c7d;
+    display: none;
+}
+
+.role-info.active {
+    display: block;
+}
+
+.auth-btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 1.5rem 0;
+}
+
+.auth-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.auth-links p {
+    color: #7f8c8d;
+    margin: 0;
+}
+
+.auth-link {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .auth-container {
+        margin: 1rem auto;
+        padding: 0 0.5rem;
+    }
+
+    .auth-card {
+        padding: 2rem 1.5rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const roleSelect = document.getElementById('role');
+    const roleInfos = document.querySelectorAll('.role-info');
+
+    roleSelect.addEventListener('change', function() {
+        // Скрываем все описания
+        roleInfos.forEach(info => info.classList.remove('active'));
+
+        // Показываем выбранное описание
+        const selectedRole = this.value;
+        if (selectedRole) {
+            const selectedInfo = document.querySelector(`.role-info[data-role="${selectedRole}"]`);
+            if (selectedInfo) {
+                selectedInfo.classList.add('active');
+            }
+        }
+    });
+
+    // Показываем описание при фокусе
+    roleSelect.addEventListener('focus', function() {
+        if (this.value) {
+            const selectedInfo = document.querySelector(`.role-info[data-role="${this.value}"]`);
+            if (selectedInfo) {
+                selectedInfo.classList.add('active');
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

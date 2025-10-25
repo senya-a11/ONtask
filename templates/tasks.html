@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+
+{% block title %}Задачи команды - TeamFlow{% endblock %}
+
+{% block content %}
+<div class="tasks-page">
+    <div class="tasks-container">
+        <div class="tasks-header">
+            <div>
+                <h1>Задачи команды</h1>
+                <p>Все текущие задачи и их статус</p>
+            </div>
+            {% if session.role == 'team_leader' %}
+            <a href="/addtask" class="add-task-btn">+ Новая задача</a>
+            {% endif %}
+        </div>
+
+        <div class="tasks-grid">
+            {% for task in tasks %}
+            <div class="task-card">
+                <div class="task-header">
+                    <h3>{{ task.title }}</h3>
+                    <div class="task-status {{ 'status-completed' if task.status == 'completed' else 'status-overdue' if task.deadline and task.deadline < now else 'status-active' }}">
+                        {% if task.status == 'completed' %}Завершена
+                        {% elif task.deadline and task.deadline < now %}Просрочена
+                        {% else %}Активна{% endif %}
+                    </div>
+                </div>
+
+                <div class="task-content">
+                    <p class="description-text {% if task.content|length > 150 %}truncated{% endif %}">
+                        {{ task.content }}
+                    </p>
+                    {% if task.content|length > 150 %}
+                    <button class="expand-btn" onclick="toggleDescription(this)">
+                        <span class="expand-text">Развернуть</span>
+                        <span class="collapse-text" style="display:none">Свернуть</span>
+                    </button>
+                    {% endif %}
+                </div>
+
+                <div class="task-meta">
+                    <div class="meta-item">
+                        <span>Автор:</span>
+                        <strong>{{ task.author_name or 'Не указан' }}</strong>
+                    </div>
+                    <div class="meta-item">
+                        <span>Исполнитель:</span>
+                        <strong>{{ task.assigned_to_name or 'Не назначен' }}</strong>
+                    </div>
+                    <div class="meta-item">
+                        <span>Создана:</span>
+                        <strong>{{ task.created_at.strftime('%d.%m.%Y %H:%M') }}</strong>
+                    </div>
+                    {% if task.deadline %}
+                    <div class="meta-item">
+                        <span>Дедлайн:</span>
+                        <strong class="deadline {{ 'deadline-overdue' if task.deadline < now else 'deadline-active' }}">
+                            {{ task.deadline.strftime('%d.%m.%Y') }}
+                        </strong>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="task-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill {{ 'progress-completed' if task.status == 'completed' else 'progress-active' }}"
+                             style="width: {{ '100%' if task.status == 'completed' else '60%' }}"></div>
+                    </div>
+                    <span>{% if task.status == 'completed' %}100% выполнено{% else %}В работе{% endif %}</span>
+                </div>
+
+                {% if task.status != 'completed' and (session.role == 'team_leader' or session.user_id == task.assigned_to) %}
+                <div class="task-actions">
+                    <form method="POST" action="/complete_task/{{ task.task_info_id }}">
+                        <button type="submit" class="complete-btn" onclick="return confirm('Отметить задачу как выполненную?')">
+                            ✓ Выполнено
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="no-tasks">
+                <div>📋</div>
+                <h3>Задач пока нет</h3>
+                <p>Создайте первую задачу для вашей команды</p>
+                {% if session.role == 'team_leader' %}
+                <a href="/addtask" class="btn-primary">Создать задачу</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+.tasks-page { background: #f8f9fa; min-height: 100vh; padding: 2rem; }
+.tasks-container { max-width: 1200px; margin: 0 auto; }
+
+.tasks-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem;
+}
+.tasks-header h1 { font-size: 2.5rem; font-weight: 600; color: #2d3748; margin: 0 0 0.5rem 0; }
+.tasks-header p { color: #718096; margin: 0; }
+
+.add-task-btn {
+    background: #667eea; color: white; padding: 0.75rem 1.5rem;
+    border-radius: 8px; text-decoration: none; font-weight: 500;
+    transition: all 0.3s ease;
+}
+.add-task-btn:hover { background: #5a67d8; transform: translateY(-1px); }
+
+/* Ключевое изменение: убираем фиксированную высоту и используем auto-fit */
+.tasks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+    align-items: start; /* Выравниваем по верху */
+}
+
+.task-card {
+    background: white; border-radius: 12px; padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    height: auto; /* Убираем фиксированную высоту */
+    min-height: auto; /* Минимальная высота по содержимому */
+    display: flex;
+    flex-direction: column;
+}
+.task-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+
+.task-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 1rem; gap: 1rem;
+    flex-shrink: 0; /* Заголовок не сжимается */
+}
+.task-header h3 {
+    font-size: 1.25rem; font-weight: 600; color: #2d3748;
+    margin: 0; flex: 1;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+.task-status {
+    padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;
+    font-weight: 500; white-space: nowrap;
+    flex-shrink: 0; /* Статус не сжимается */
+}
+.status-active { background: #e3f2fd; color: #1976d2; }
+.status-completed { background: #e8f5e8; color: #2e7d32; }
+.status-overdue { background: #ffebee; color: #c53030; }
+
+.task-content {
+    margin-bottom: 1.5rem;
+    flex: 1; /* Занимает доступное пространство */
+    min-height: auto; /* Минимальная высота по содержимому */
+}
+.description-text {
+    color: #4a5568; line-height: 1.6; margin: 0 0 1rem 0;
+    word-wrap: break-word;
+}
+.description-text.truncated {
+    display: -webkit-box; -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical; overflow: hidden;
+}
+.description-text.expanded {
+    display: block; -webkit-line-clamp: unset;
+}
+
+.expand-btn {
+    background: none; border: none; color: #667eea; font-size: 0.9rem;
+    cursor: pointer; padding: 0; font-weight: 500;
+    align-self: flex-start; /* Кнопка выравнивается по левому краю */
+}
+.expand-btn:hover { color: #5a67d8; }
+
+.task-meta {
+    margin-bottom: 1.5rem; padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+    flex-shrink: 0; /* Мета-информация не сжимается */
+}
+.meta-item {
+    display: flex; justify-content: space-between;
+    margin-bottom: 0.75rem; font-size: 0.9rem;
+}
+.meta-item span { color: #718096; }
+.meta-item strong { color: #2d3748; }
+
+.deadline { padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; }
+.deadline-active { background: #f0fff4; color: #2f855a; }
+.deadline-overdue { background: #fed7d7; color: #c53030; }
+
+.task-progress {
+    display: flex; align-items: center; gap: 1rem;
+    flex-shrink: 0; /* Прогресс не сжимается */
+}
+.progress-bar {
+    flex: 1; height: 6px; background: #e2e8f0;
+    border-radius: 3px; overflow: hidden;
+}
+.progress-fill { height: 100%; border-radius: 3px; transition: width 0.3s ease; }
+.progress-active { background: #667eea; }
+.progress-completed { background: #48bb78; }
+.task-progress span { font-size: 0.8rem; color: #718096; white-space: nowrap; }
+
+.task-actions {
+    margin-top: 1rem; padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+    flex-shrink: 0; /* Кнопки не сжимаются */
+}
+.complete-btn {
+    width: 100%; background: #48bb78; color: white; border: none;
+    padding: 0.75rem 1rem; border-radius: 6px; cursor: pointer;
+    font-weight: 500; transition: all 0.3s ease;
+}
+.complete-btn:hover { background: #38a169; transform: translateY(-1px); }
+
+.no-tasks {
+    grid-column: 1 / -1; text-align: center; padding: 4rem 2rem;
+    background: white; border-radius: 12px; border: 2px dashed #e2e8f0;
+}
+.no-tasks div { font-size: 4rem; margin-bottom: 1rem; opacity: 0.5; }
+.no-tasks h3 { color: #2d3748; margin-bottom: 0.5rem; }
+.no-tasks p { color: #718096; margin-bottom: 2rem; }
+
+.btn-primary {
+    background: #667eea; color: white; padding: 0.75rem 1.5rem;
+    border-radius: 8px; text-decoration: none; font-weight: 500;
+}
+.btn-primary:hover { background: #5a67d8; }
+
+@media (max-width: 768px) {
+    .tasks-page { padding: 1rem; }
+    .tasks-header { flex-direction: column; align-items: stretch; text-align: center; }
+    .tasks-header h1 { font-size: 2rem; }
+    .add-task-btn { justify-content: center; display: flex; }
+    .tasks-grid { grid-template-columns: 1fr; }
+    .meta-item { flex-direction: column; gap: 0.25rem; }
+    .task-header { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+    .task-status { align-self: flex-start; }
+}
+
+@media (max-width: 480px) {
+    .tasks-grid { grid-template-columns: 1fr; }
+    .task-card { padding: 1.25rem; }
+}
+</style>
+
+<script>
+function toggleDescription(button) {
+    const description = button.closest('.task-content').querySelector('.description-text');
+    const expandText = button.querySelector('.expand-text');
+    const collapseText = button.querySelector('.collapse-text');
+
+    if (description.classList.contains('truncated')) {
+        description.classList.remove('truncated');
+        description.classList.add('expanded');
+        expandText.style.display = 'none';
+        collapseText.style.display = 'inline';
+    } else {
+        description.classList.remove('expanded');
+        description.classList.add('truncated');
+        expandText.style.display = 'inline';
+        collapseText.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}
