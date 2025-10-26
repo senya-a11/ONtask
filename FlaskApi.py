@@ -14,7 +14,7 @@ from urllib.parse import urlparse
 def get_db_connection():
     try:
         # Получаем DATABASE_URL из переменных окружения Render
-        database_url = os.environ.get('postgresql://teamflow_arshuklin:PVtSQIezDkVj93IjYPqIhHz8h75cotLJ@dpg-d3um6q8dl3ps73f8jmp0-a.frankfurt-postgres.render.com/teamflow_db_1jiq')
+        database_url = os.environ.get('database_url')
 # postgresql://teamflow_arshuklin:PVtSQIezDkVj93IjYPqIhHz8h75cotLJ@dpg-d3um6q8dl3ps73f8jmp0-a.frankfurt-postgres.render.com/teamflow_db_1jiq
         if database_url:
             # Исправляем для совместимости с psycopg2
@@ -25,13 +25,14 @@ def get_db_connection():
         else:
             # Локальная разработка
             conn = psycopg2.connect(
-                host=os.environ.get("host", "localhost"),
-                user=os.environ.get("user", "postgres"),
-                password=os.environ.get("password", ""),
+                host=os.environ.get("host"),
+                user=os.environ.get("user"),
+                password=os.environ.get("password"),
                 port=os.environ.get("port", "5432"),
-                dbname=os.environ.get("dbname", "flask_db"),
+                dbname=os.environ.get("dbname"),
                 client_encoding='utf-8'
             )
+        print("GOOOOOOOOOOOOOOOOOOOD")
         return conn
     except Exception as e:
         print(f"Ошибка подключения к БД: {e}")
@@ -342,6 +343,3 @@ def addtask():
 def about():
     return render_template("about.html")
 
-
-if __name__ == "__main__":
-    app.run(debug=True)
