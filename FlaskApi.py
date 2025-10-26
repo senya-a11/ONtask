@@ -8,16 +8,16 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 
+if not app.secret_key:
+    raise ValueError("No SECRET_KEY set for Flask application")
 from urllib.parse import urlparse
 
 
 def get_db_connection():
     try:
-        # Получаем DATABASE_URL из переменных окружения Render
-        database_url = os.environ.get('database_url')
-# postgresql://teamflow_arshuklin:PVtSQIezDkVj93IjYPqIhHz8h75cotLJ@dpg-d3um6q8dl3ps73f8jmp0-a.frankfurt-postgres.render.com/teamflow_db_1jiq
+        database_url = os.environ.get('DATABASE_URL')
+
         if database_url:
-            # Исправляем для совместимости с psycopg2
             if database_url.startswith('postgres://'):
                 database_url = database_url.replace('postgres://', 'postgresql://', 1)
 
@@ -25,19 +25,16 @@ def get_db_connection():
         else:
             # Локальная разработка
             conn = psycopg2.connect(
-                host=os.environ.get("host"),
-                user=os.environ.get("user"),
-                password=os.environ.get("password"),
-                port=os.environ.get("port", "5432"),
-                dbname=os.environ.get("dbname"),
-                client_encoding='utf-8'
+                host=os.environ.get("DB_HOST", "localhost"),
+                user=os.environ.get("DB_USER", "postgres"),
+                password=os.environ.get("DB_PASSWORD", ""),
+                port=os.environ.get("DB_PORT", "5432"),
+                dbname=os.environ.get("DB_NAME", "flask_db")
             )
-        print("GOOOOOOOOOOOOOOOOOOOD")
         return conn
     except Exception as e:
-        print(f"Ошибка подключения к БД: {e}")
+        print(f"Database connection error: {e}")
         return None
-
 
 def login_required(f):
     from functools import wraps
