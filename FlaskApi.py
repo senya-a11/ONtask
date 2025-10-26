@@ -17,23 +17,43 @@ def get_db_connection():
     try:
         database_url = os.environ.get('DATABASE_URL')
 
-        if database_url:
-            if database_url.startswith('postgres://'):
-                database_url = database_url.replace('postgres://', 'postgresql://', 1)
+        print(f"🔍 DEBUG: DATABASE_URL = {database_url}")
 
-            conn = psycopg2.connect(database_url, sslmode='require')
-        else:
+        if not database_url:
             # Локальная разработка
             conn = psycopg2.connect(
-                host=os.environ.get("DB_HOST", "localhost"),
-                user=os.environ.get("DB_USER", "postgres"),
-                password=os.environ.get("DB_PASSWORD", ""),
-                port=os.environ.get("DB_PORT", "5432"),
-                dbname=os.environ.get("DB_NAME", "flask_db")
+                host=os.environ["host"],
+                user=os.environ["user"],
+                password=os.environ["password"],
+                port=os.environ["port"],
+                dbname=os.environ["dbname"],
+                client_encoding='utf-8'
             )
+            print("✅ Connected to local database")
+            return conn
+
+        # Исправляем URL если нужно
+        if database_url.startswith('postgres://'):
+            database_url = database_url.replace('postgres://', 'postgresql://', 1)
+            print("🔍 DEBUG: Fixed URL protocol")
+
+        # Парсим URL для проверки
+        parsed_url = urlparse(database_url)
+        print(f"🔍 DEBUG: Database name = {parsed_url.path[1:]}")  # Убираем первый /
+
+        # Подключаемся с SSL
+        conn = psycopg2.connect(
+            dsn=database_url,
+            sslmode='require'
+        )
+        print("✅ Connected to Render PostgreSQL successfully!")
         return conn
+
+    except psycopg2.OperationalError as e:
+        print(f"❌ Database operational error: {e}")
+        return None
     except Exception as e:
-        print(f"Database connection error: {e}")
+        print(f"❌ Unexpected error: {e}")
         return None
 
 def login_required(f):
