@@ -5,241 +5,399 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}TeamFlow{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Стили для мобильной навигации */
-        .nav-desktop {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
+        :root {
+            --primary-color: #2C3E50;
+            --secondary-color: #7F8C8D;
+            --accent-color: #7BB8E8;
+            --accent-hover: #6AA7D6;
+            --background-color: #FDFDFD;
+            --border-color: #E8EDF2;
+            --section-background: #F8FAFC;
+            --card-background: #FFFFFF;
+            --nav-background: rgba(253, 253, 253, 0.95);
+            --nav-border: #E8EDF2;
         }
 
-        .nav-mobile {
-            display: none;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 400;
+            line-height: 1.47059;
+            color: var(--primary-color);
+            background-color: var(--background-color);
+            -webkit-font-smoothing: antialiased;
         }
 
-        .mobile-menu-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #666;
-            cursor: pointer;
-            padding: 0.5rem;
+        /* Навигация в пастельных тонах */
+        .navbar-apple {
+            background-color: var(--nav-background);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--nav-border);
+            padding: 0;
+            height: 60px;
         }
 
-        .mobile-menu {
-            display: none;
-            flex-direction: column;
-            gap: 1rem;
-            padding: 1rem 0;
-            border-top: 1px solid #dee2e6;
-            background: white;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        .navbar-apple .container-fluid {
+            max-width: 100%;
+            padding: 0 2rem;
         }
 
-        .mobile-menu.active {
-            display: flex;
+        @media (max-width: 768px) {
+            .navbar-apple .container-fluid {
+                padding: 0 1rem;
+            }
         }
 
-        .user-info {
+        .navbar-brand-apple {
+            font-size: 21px;
+            font-weight: 600;
+            color: var(--primary-color) !important;
+            text-decoration: none;
+            padding: 18px 0;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            flex-wrap: wrap;
         }
 
-        .role-badge {
-            background: #667eea;
+        .navbar-brand-apple:hover {
+            color: var(--primary-color) !important;
+            text-decoration: none;
+        }
+
+        .nav-link-apple {
+            color: var(--secondary-color) !important;
+            font-size: 14px;
+            font-weight: 400;
+            padding: 20px 16px !important;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .nav-link-apple:hover {
+            color: var(--primary-color) !important;
+            background-color: var(--section-background);
+            text-decoration: none;
+        }
+
+        .navbar-toggler-apple {
+            border: none;
+            padding: 8px;
+            color: var(--secondary-color);
+        }
+
+        .navbar-toggler-apple:focus {
+            box-shadow: none;
+        }
+
+        /* Кнопки в пастельных тонах */
+        .btn-apple {
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-apple-primary {
+            background-color: var(--accent-color);
+            color: white !important;
+            border-color: var(--accent-color);
+        }
+
+        .btn-apple-primary:hover {
+            background-color: var(--accent-hover);
+            color: white !important;
+            transform: translateY(-1px);
+            text-decoration: none;
+        }
+
+        .btn-apple-outline {
+            background-color: transparent;
+            color: var(--accent-color) !important;
+            border-color: var(--accent-color);
+        }
+
+        .btn-apple-outline:hover {
+            background-color: var(--accent-color);
+            color: white !important;
+            transform: translateY(-1px);
+            text-decoration: none;
+        }
+
+        /* User info */
+        .user-info-apple {
+            font-size: 14px;
+            color: var(--secondary-color);
+        }
+
+        .role-badge-apple {
+            background: var(--accent-color);
             color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
         }
 
-        /* Адаптивные стили */
-        @media (max-width: 768px) {
-            .nav-desktop {
-                display: none;
+        /* Mobile menu improvements */
+        .navbar-collapse-apple {
+            background: var(--nav-background);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            margin-top: 1px;
+            border-top: 1px solid var(--nav-border);
+        }
+
+        @media (max-width: 991px) {
+            .nav-link-apple {
+                padding: 16px !important;
+                border-bottom: 1px solid var(--border-color);
             }
 
-            .nav-mobile {
-                display: block;
-                position: relative;
+            .navbar-nav .nav-item:last-child .nav-link-apple {
+                border-bottom: none;
             }
 
-            .user-info {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-                padding: 0 1rem;
-            }
-
-            .user-info span {
-                margin: 0;
-            }
-
-            /* Улучшение отступов для мобильных */
-            nav {
-                padding: 1rem !important;
-            }
-
-            footer {
-                padding: 1.5rem !important;
-            }
-
-            .mobile-menu a {
-                padding: 0.75rem 1rem;
-                border-bottom: 1px solid #f8f9fa;
-            }
-
-            .mobile-menu .user-info {
-                padding: 1rem;
-                background: #f8f9fa;
-                margin: 0;
+            .user-info-mobile-apple {
+                padding: 20px;
+                border-top: 1px solid var(--border-color);
+                background: var(--section-background);
             }
         }
 
-        /* Общие улучшения */
-        .task-card {
-            transition: transform 0.2s;
+        /* Flash messages */
+        .alert-apple {
+            border-radius: 12px;
+            border: none;
+            font-size: 14px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
         }
 
-        .task-card:hover {
+        .alert-success-apple {
+            background-color: #F0F9FF;
+            color: var(--accent-color);
+            border: 1px solid #E0F2FE;
+        }
+
+        .alert-error-apple {
+            background-color: #FEF2F2;
+            color: #DC2626;
+            border: 1px solid #FECACA;
+        }
+
+        /* Main content */
+        .main-content-apple {
+            min-height: calc(100vh - 120px);
+            width: 100%;
+        }
+
+        .container-apple {
+            max-width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Footer */
+        .footer-apple {
+            background-color: var(--section-background);
+            color: var(--secondary-color);
+            font-size: 14px;
+            padding: 32px 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-apple a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-apple a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        /* Utility classes */
+        .text-gradient {
+            background: linear-gradient(135deg, #7BB8E8 0%, #6AA7D6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hover-lift {
+            transition: transform 0.3s ease;
+        }
+
+        .hover-lift:hover {
             transform: translateY(-2px);
-        }
-
-        .status-badge {
-            font-size: 0.8rem;
-            padding: 0.4rem 0.8rem;
         }
     </style>
 </head>
-<body style="margin: 0; padding: 0; width: 100%; min-height: 100vh; display: flex; flex-direction: column;">
-    <!-- Адаптивный header -->
-    <nav style="padding: 1rem 2rem; border-bottom: 1px solid #dee2e6; background: white; width: 100%; position: relative;">
-        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; flex-wrap: wrap;">
-            <div>
-                <a href="/" style="text-decoration: none; font-weight: bold; color: #667eea; font-size: 1.25rem;">TeamFlow</a>
-            </div>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Навигация в пастельных тонах -->
+    <nav class="navbar navbar-expand-lg navbar-apple fixed-top">
+        <div class="container-fluid">
+            <!-- Бренд -->
+            <a class="navbar-brand-apple" href="/">
+                <i class="fas fa-wave-square text-gradient"></i>
+                TeamFlow
+            </a>
 
-            <!-- Навигация для десктопа -->
-            <div class="nav-desktop">
-                <a href="/" style="text-decoration: none; color: #666;">Главная</a>
-                <a href="/tasks" style="text-decoration: none; color: #666;">Задачи</a>
-                {% if session.role == 'team_leader' %}
-                <a href="/addtask" style="text-decoration: none; color: #666;">Добавить задачу</a>
-                {% endif %}
-                <a href="/about" style="text-decoration: none; color: #666;">О нас</a>
+            <!-- Кнопка мобильного меню -->
+            <button class="navbar-toggler navbar-toggler-apple" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarContent" aria-controls="navbarContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
 
-                {% if session.username %}
-                    <div class="user-info">
-                        <span style="color: #666;">
-                            {{ session.username }}
-                            <span class="role-badge">
-                                {% if session.role == 'team_leader' %}Leader{% else %}Crew{% endif %}
-                            </span>
-                        </span>
-                        <a href="/logout" style="text-decoration: none; color: #667eea; border: 1px solid #667eea; padding: 0.5rem 1rem; border-radius: 4px;">Выйти</a>
-                    </div>
-                {% else %}
-                    <div style="display: flex; gap: 0.5rem;">
-                        <a href="/login" style="text-decoration: none; color: #667eea; border: 1px solid #667eea; padding: 0.5rem 1rem; border-radius: 4px;">Войти</a>
-                        <a href="/register" style="text-decoration: none; background: #667eea; color: white; padding: 0.5rem 1rem; border-radius: 4px;">Регистрация</a>
-                    </div>
-                {% endif %}
-            </div>
-
-            <!-- Навигация для мобильных -->
-            <div class="nav-mobile">
-                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
-                <div class="mobile-menu" id="mobileMenu">
-                    <a href="/" style="text-decoration: none; color: #666;">Главная</a>
-                    <a href="/tasks" style="text-decoration: none; color: #666;">Задачи</a>
+            <!-- Основное содержимое навигации -->
+            <div class="collapse navbar-collapse navbar-collapse-apple" id="navbarContent">
+                <!-- Левая часть навигации -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link-apple" href="/">Main</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-apple" href="/tasks">Tasks</a>
+                    </li>
                     {% if session.role == 'team_leader' %}
-                    <a href="/addtask" style="text-decoration: none; color: #666;">Добавить задачу</a>
+                    <li class="nav-item">
+                        <a class="nav-link-apple" href="/addtask">Add Task</a>
+                    </li>
                     {% endif %}
-                    <a href="/about" style="text-decoration: none; color: #666;">О нас</a>
+                </ul>
 
+                <!-- Правая часть навигации -->
+                <div class="d-flex align-items-center gap-3">
                     {% if session.username %}
-                        <div class="user-info">
-                            <span style="color: #666;">
+                        <!-- Десктопная версия пользовательской информации -->
+                        <div class="d-none d-lg-flex align-items-center gap-3">
+                            <span class="user-info-apple">
                                 {{ session.username }}
-                                <span class="role-badge">
-                                    {% if session.role == 'team_leader' %}Leader{% else %}Crew{% endif %}
+                                <span class="role-badge-apple ms-2">
+                                    {% if session.role == 'team_leader' %}Leader{% else %}Member{% endif %}
                                 </span>
                             </span>
-                            <a href="/logout" style="text-decoration: none; color: #667eea; border: 1px solid #667eea; padding: 0.5rem 1rem; border-radius: 4px; width: 100%; text-align: center; margin-top: 0.5rem;">Выйти</a>
+                            <a href="/logout" class="btn-apple btn-apple-outline text-decoration-none">
+                                Sign Out
+                            </a>
                         </div>
                     {% else %}
-                        <div style="display: flex; flex-direction: column; gap: 0.5rem; padding: 1rem;">
-                            <a href="/login" style="text-decoration: none; color: #667eea; border: 1px solid #667eea; padding: 0.75rem 1rem; border-radius: 4px; text-align: center;">Войти</a>
-                            <a href="/register" style="text-decoration: none; background: #667eea; color: white; padding: 0.75rem 1rem; border-radius: 4px; text-align: center;">Регистрация</a>
+                        <!-- Десктопная версия кнопок авторизации -->
+                        <div class="d-none d-lg-flex gap-2">
+                            <a href="/login" class="btn-apple btn-apple-outline text-decoration-none">
+                                Sign In
+                            </a>
+                            <a href="/register" class="btn-apple btn-apple-primary text-decoration-none">
+                                Sign Up
+                            </a>
                         </div>
                     {% endif %}
                 </div>
             </div>
+
+            <!-- Мобильная версия пользовательской информации -->
+            {% if session.username %}
+            <div class="d-lg-none user-info-mobile-apple w-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="user-info-apple">
+                        {{ session.username }}
+                        <span class="role-badge-apple ms-2">
+                            {% if session.role == 'team_leader' %}Leader{% else %}Member{% endif %}
+                        </span>
+                    </span>
+                </div>
+                <div class="d-grid gap-2">
+                    <a href="/logout" class="btn-apple btn-apple-outline text-decoration-none text-center">
+                        Sign Out
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <div class="d-lg-none user-info-mobile-apple w-100">
+                <div class="d-grid gap-2">
+                    <a href="/login" class="btn-apple btn-apple-outline text-decoration-none text-center">
+                        Sign In
+                    </a>
+                    <a href="/register" class="btn-apple btn-apple-primary text-decoration-none text-center">
+                        Sign Up
+                    </a>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </nav>
 
     <!-- Flash сообщения -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div style="width: 100%; padding: 1rem;">
-                <div style="max-width: 1200px; margin: 0 auto;">
+    <div class="container-apple mt-5 pt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="container mt-3">
                     {% for category, message in messages %}
-                        <div style="padding: 1rem; margin: 0.5rem 0; border-radius: 4px;
-                                    {% if category == 'error' %}background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;
-                                    {% else %}background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb;{% endif %}">
-                            {{ message }}
+                        <div class="alert-apple {% if category == 'error' %}alert-error-apple{% else %}alert-success-apple{% endif %}">
+                            <div class="d-flex align-items-center">
+                                <i class="fas {% if category == 'error' %}fa-exclamation-circle{% else %}fa-check-circle{% endif %} me-2"></i>
+                                {{ message }}
+                            </div>
                         </div>
                     {% endfor %}
                 </div>
-            </div>
-        {% endif %}
-    {% endwith %}
+            {% endif %}
+        {% endwith %}
+    </div>
 
-    <!-- Основной контент -->
-    <main style="width: 100%; flex: 1; padding: 1rem;">
-        <div style="max-width: 1200px; margin: 0 auto;">
-            {% block content %}{% endblock %}
-        </div>
+    <!-- Основной контент - растянут на всю ширину -->
+    <main class="main-content-apple mt-5">
+        {% block content %}{% endblock %}
     </main>
 
-    <!-- Простой footer -->
-    <footer style="padding: 2rem; background: #f8f9fa; border-top: 1px solid #dee2e6; width: 100%;">
-        <div style="max-width: 1200px; margin: 0 auto; text-align: center; color: #666;">
-            <p>© 2025 TeamFlow. All rights reserved.</p>
+    <!-- Footer -->
+    <footer class="footer-apple mt-auto">
+        <div class="container-fluid text-center">
+            <p class="mb-0">© 2025 TeamFlow. All rights reserved.</p>
+            <div class="mt-2">
+                <a href="#" class="me-3">Privacy Policy</a>
+                <a href="#" class="me-3">Terms of Use</a>
+                <a href="#">Support</a>
+            </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function toggleMobileMenu() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            mobileMenu.classList.toggle('active');
-        }
-
-        // Закрытие мобильного меню при клике вне его области
-        document.addEventListener('click', function(event) {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-
-            if (mobileMenu && mobileMenuBtn &&
-                !mobileMenu.contains(event.target) &&
-                !mobileMenuBtn.contains(event.target)) {
-                mobileMenu.classList.remove('active');
-            }
+        // Плавная прокрутка для всех ссылок
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
         });
 
-        // Закрытие мобильного меню при изменении размера окна
-        window.addEventListener('resize', function() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            if (window.innerWidth > 768 && mobileMenu) {
-                mobileMenu.classList.remove('active');
+        // Закрытие мобильного меню при клике на ссылку
+        document.querySelectorAll('.nav-link-apple').forEach(link => {
+            link.addEventListener('click', () => {
+                const navbarCollapse = document.getElementById('navbarContent');
+                if (navbarCollapse.classList.contains('show')) {
+                    bootstrap.Collapse.getInstance(navbarCollapse).hide();
+                }
+            });
+        });
+
+        // Добавление тени при скролле
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar-apple');
+            if (window.scrollY > 10) {
+                navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.08)';
+            } else {
+                navbar.style.boxShadow = 'none';
             }
         });
     </script>

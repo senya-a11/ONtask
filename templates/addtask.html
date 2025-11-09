@@ -3,10 +3,13 @@
 {% block title %}Добавить задачу{% endblock %}
 
 {% block content %}
-<div class="addtask-fullpage">
-    <div class="addtask-centered">
+<div class="addtask-page">
+    <div class="addtask-container">
         <div class="addtask-card">
             <div class="addtask-header">
+                <div class="header-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
                 <h1>Новая задача</h1>
                 <p>Создайте задачу для команды</p>
             </div>
@@ -14,41 +17,56 @@
             <form method="post" class="addtask-form">
                 <div class="form-group">
                     <label for="title">Название задачи</label>
-                    <input type="text" id="title" name="title"
-                           placeholder="Введите название задачи..." required>
+                    <div class="input-with-icon">
+                        <i class="fas fa-heading input-icon"></i>
+                        <input type="text" id="title" name="title"
+                               placeholder="Введите название задачи..." required>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label for="task">Описание задачи</label>
-                    <textarea id="task" name="task"
-                              placeholder="Опишите детали задачи..."
-                              rows="5" required></textarea>
+                    <div class="textarea-with-icon">
+                        <i class="fas fa-align-left textarea-icon"></i>
+                        <textarea id="task" name="task"
+                                  placeholder="Опишите детали задачи..."
+                                  rows="5" required></textarea>
+                    </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="assigned_to">Исполнитель</label>
-                        <select id="assigned_to" name="assigned_to">
-                            <option value="">Не назначать</option>
-                            {% for user in users %}
-                            <option value="{{ user.id }}">{{ user.username }}</option>
-                            {% endfor %}
-                        </select>
+                        <div class="input-with-icon">
+                            <i class="fas fa-user-check input-icon"></i>
+                            <select id="assigned_to" name="assigned_to">
+                                <option value="">Не назначать</option>
+                                {% for user in users %}
+                                <option value="{{ user.id }}">{{ user.username }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="deadline">Дедлайн</label>
-                        <input type="date" id="deadline" name="deadline">
+                        <div class="input-with-icon">
+                            <i class="fas fa-calendar-alt input-icon"></i>
+                            <input type="date" id="deadline" name="deadline">
+                        </div>
                     </div>
                 </div>
 
                 <div class="form-actions">
                     <button type="submit" class="create-task-btn">
-                        <span class="btn-icon">📋</span>
+                        <i class="fas fa-clipboard-check btn-icon"></i>
                         <span class="btn-text">Создать задачу</span>
-                        <span class="btn-arrow">→</span>
+                        <i class="fas fa-arrow-right btn-arrow"></i>
                     </button>
-                    <a href="/tasks" class="cancel-btn">Отмена</a>
+                    <a href="/tasks" class="cancel-btn">
+                        <i class="fas fa-times"></i>
+                        <span>Отмена</span>
+                    </a>
                 </div>
             </form>
         </div>
@@ -56,43 +74,30 @@
 </div>
 
 <style>
-/* Фон на всю страницу */
-.addtask-fullpage {
+.addtask-page {
     min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--section-background);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
-    width: 100%;
-    margin: 0;
+    padding: 2rem 1rem;
 }
 
-/* Центрирующий контейнер */
-.addtask-centered {
+.addtask-container {
     width: 100%;
-    max-width: 1200px; /* Ограничиваем максимальную ширину, но не минимальную */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
+    max-width: 600px;
 }
 
-/* Карточка формы */
 .addtask-card {
-    background: white;
+    background: var(--card-background);
     border-radius: 20px;
-    padding: 3rem;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    width: 100%;
-    max-width: 600px; /* Только форма ограничена по ширине */
-    backdrop-filter: blur(10px);
+    padding: 3rem 2.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
 }
 
-/* Остальные стили остаются прежними */
 .addtask-card::before {
     content: '';
     position: absolute;
@@ -100,71 +105,117 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #667eea, #764ba2);
+    background: var(--accent-color);
 }
 
 .addtask-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.header-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--soft-blue);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2rem;
+    color: var(--accent-color);
 }
 
 .addtask-header h1 {
     font-size: 1.75rem;
     font-weight: 600;
-    color: #2c3e50;
+    color: var(--primary-color);
     margin-bottom: 0.5rem;
 }
 
 .addtask-header p {
-    color: #7f8c8d;
+    color: var(--secondary-color);
     font-size: 1rem;
+    margin: 0;
 }
 
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.8rem;
 }
 
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
     font-weight: 500;
-    color: #2c3e50;
+    color: var(--primary-color);
     font-size: 0.95rem;
+}
+
+.input-with-icon,
+.textarea-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon,
+.textarea-icon {
+    position: absolute;
+    left: 1rem;
+    font-size: 1.1rem;
+    color: var(--secondary-color);
+    z-index: 2;
+}
+
+.textarea-icon {
+    top: 1rem;
+    align-self: flex-start;
 }
 
 .form-group input,
 .form-group textarea,
 .form-group select {
     width: 100%;
-    padding: 0.75rem 1rem;
-    border: 2px solid #e1e5e9;
-    border-radius: 10px;
+    padding: 0.9rem 1rem 0.9rem 3rem;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
     font-size: 1rem;
     transition: all 0.3s ease;
-    background: #f8f9fa;
+    background: var(--section-background);
     font-family: inherit;
+    color: var(--primary-color);
+}
+
+.form-group textarea {
+    padding-top: 0.9rem;
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.5;
 }
 
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #667eea;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: var(--accent-color);
+    background: var(--card-background);
+    box-shadow: 0 0 0 3px rgba(123, 184, 232, 0.1);
     transform: translateY(-1px);
 }
 
-.form-group textarea {
-    resize: vertical;
-    min-height: 120px;
-    font-family: inherit;
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237F8C8D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1rem;
+    padding-right: 3rem;
 }
 
 .form-actions {
@@ -175,15 +226,15 @@
 
 .create-task-btn {
     flex: 1;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: var(--accent-color);
     color: white;
     border: none;
-    padding: 1.2rem 2rem;
+    padding: 1rem 2rem;
     border-radius: 12px;
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.4s ease;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -191,42 +242,29 @@
     overflow: hidden;
 }
 
-.create-task-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.6s;
-}
-
-.create-task-btn:hover::before {
-    left: 100%;
-}
-
 .create-task-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(123, 184, 232, 0.3);
 }
 
 .btn-icon {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     transition: transform 0.3s ease;
 }
 
 .btn-text {
     letter-spacing: 0.5px;
+    transition: all 0.3s ease;
 }
 
 .btn-arrow {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     transition: transform 0.3s ease;
 }
 
 .create-task-btn:hover .btn-arrow {
-    transform: translateX(5px);
+    transform: translateX(4px);
 }
 
 .create-task-btn:hover .btn-icon {
@@ -234,29 +272,30 @@
 }
 
 .cancel-btn {
-    background: #f8f9fa;
-    color: #7f8c8d;
-    border: 2px solid #e1e5e9;
-    padding: 1.2rem 2rem;
+    background: var(--section-background);
+    color: var(--secondary-color);
+    border: 2px solid var(--border-color);
+    padding: 1rem 1.5rem;
     border-radius: 12px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 500;
     text-decoration: none;
     text-align: center;
     transition: all 0.3s ease;
-    flex: 0.5;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 0.5rem;
+    min-width: 120px;
 }
 
 .cancel-btn:hover {
-    background: white;
-    border-color: #667eea;
-    color: #667eea;
+    background: var(--card-background);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
     text-decoration: none;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(123, 184, 232, 0.2);
 }
 
 @keyframes fadeInUp {
@@ -274,18 +313,28 @@
     animation: fadeInUp 0.6s ease-out;
 }
 
+.form-group {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.form-group:nth-child(1) { animation-delay: 0.1s; }
+.form-group:nth-child(2) { animation-delay: 0.2s; }
+.form-row .form-group:nth-child(1) { animation-delay: 0.3s; }
+.form-row .form-group:nth-child(2) { animation-delay: 0.4s; }
+
 @media (max-width: 768px) {
-    .addtask-fullpage {
-        padding: 1rem;
+    .addtask-page {
+        padding: 1rem 0.5rem;
     }
 
     .addtask-card {
-        padding: 2rem 1.5rem;
-        margin: 1rem;
+        padding: 2.5rem 2rem;
     }
 
     .form-row {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
 
     .form-actions {
@@ -293,8 +342,60 @@
     }
 
     .cancel-btn {
-        flex: 1;
+        min-width: auto;
+        order: -1;
+    }
+
+    .header-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 1.75rem;
+    }
+
+    .addtask-header h1 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .addtask-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .create-task-btn {
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+    }
+
+    .cancel-btn {
+        padding: 0.875rem 1.5rem;
     }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Автофокус на поле названия
+    const titleInput = document.getElementById('title');
+    titleInput.focus();
+
+    // Динамическое обновление высоты textarea
+    const textarea = document.getElementById('task');
+    textarea.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+
+    // Установка минимальной даты как сегодня
+    const deadlineInput = document.getElementById('deadline');
+    const today = new Date().toISOString().split('T')[0];
+    deadlineInput.min = today;
+
+    // Плавное появление элементов формы
+    const formGroups = document.querySelectorAll('.form-group');
+    formGroups.forEach((group, index) => {
+        group.style.animationDelay = `${0.1 + index * 0.1}s`;
+    });
+});
+</script>
 {% endblock %}

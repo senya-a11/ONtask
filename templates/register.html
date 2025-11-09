@@ -3,80 +3,96 @@
 {% block title %}Регистрация{% endblock %}
 
 {% block content %}
-<div class="auth-container">
-    <div class="auth-card">
-        <div class="auth-header">
-            <div class="auth-icon">👥</div>
-            <h1>Присоединиться к команде</h1>
-            <p>Создайте аккаунт для управления задачами</p>
+<div class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h1>Присоединиться к команде</h1>
+                <p>Создайте аккаунт для управления задачами</p>
+            </div>
+
+            <form method="post" class="auth-form">
+                <div class="form-group">
+                    <label for="username">Имя пользователя</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" id="username" name="username"
+                               placeholder="Введите ваше имя" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="password" name="password"
+                               placeholder="Создайте надежный пароль" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Роль в команде</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-bullseye input-icon"></i>
+                        <select id="role" name="role" required>
+                            <option value="">Выберите роль</option>
+                            <option value="team_leader">Team Leader</option>
+                            <option value="crew">Crew Member</option>
+                        </select>
+                    </div>
+                    <div class="role-description">
+                        <div class="role-info" data-role="team_leader">
+                            <i class="fas fa-crown"></i>
+                            <div>
+                                <strong>Team Leader:</strong> Может создавать и назначать задачи
+                            </div>
+                        </div>
+                        <div class="role-info" data-role="crew">
+                            <i class="fas fa-user-check"></i>
+                            <div>
+                                <strong>Crew Member:</strong> Выполняет назначенные задачи
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-btn-primary">
+                    <i class="fas fa-rocket"></i>
+                    <span>Зарегистрироваться</span>
+                </button>
+
+                <div class="auth-links">
+                    <p>Уже есть аккаунт? <a href="/login" class="auth-link">Войти</a></p>
+                </div>
+            </form>
         </div>
-
-        <form method="post" class="auth-form">
-            <div class="form-group">
-                <label for="username">Имя пользователя</label>
-                <div class="input-with-icon">
-                    <span class="input-icon">👤</span>
-                    <input type="text" id="username" name="username"
-                           placeholder="Введите ваше имя" required>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Пароль</label>
-                <div class="input-with-icon">
-                    <span class="input-icon">🔒</span>
-                    <input type="password" id="password" name="password"
-                           placeholder="Создайте надежный пароль" required>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="role">Роль в команде</label>
-                <div class="input-with-icon">
-                    <span class="input-icon">🎯</span>
-                    <select id="role" name="role" required>
-                        <option value="">Выберите роль</option>
-                        <option value="team_leader">Team Leader</option>
-                        <option value="crew">Crew Member</option>
-                    </select>
-                </div>
-                <div class="role-description">
-                    <div class="role-info" data-role="team_leader">
-                        <strong>Team Leader:</strong> Может создавать и назначать задачи
-                    </div>
-                    <div class="role-info" data-role="crew">
-                        <strong>Crew Member:</strong> Выполняет назначенные задачи
-                    </div>
-                </div>
-            </div>
-
-            <button type="submit" class="auth-btn-primary">
-                <span>🚀 Зарегистрироваться</span>
-            </button>
-
-            <div class="auth-links">
-                <p>Уже есть аккаунт? <a href="/login" class="auth-link">Войти</a></p>
-            </div>
-        </form>
     </div>
 </div>
 
 <style>
-.auth-container {
-    max-width: 440px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-    min-height: 80vh;
+.auth-page {
+    min-height: 100vh;
+    background: var(--section-background);
     display: flex;
     align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 440px;
 }
 
 .auth-card {
-    background: white;
-    border-radius: 16px;
-    padding: 2.5rem;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    background: var(--card-background);
+    border-radius: 20px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-color);
     width: 100%;
 }
 
@@ -86,20 +102,29 @@
 }
 
 .auth-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    width: 80px;
+    height: 80px;
+    background: var(--soft-blue);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2rem;
+    color: var(--accent-color);
 }
 
 .auth-header h1 {
     font-size: 1.75rem;
     font-weight: 600;
-    color: #2c3e50;
+    color: var(--primary-color);
     margin-bottom: 0.5rem;
 }
 
 .auth-header p {
-    color: #7f8c8d;
+    color: var(--secondary-color);
     font-size: 1rem;
+    margin: 0;
 }
 
 .auth-form .form-group {
@@ -110,7 +135,7 @@
     display: block;
     margin-bottom: 0.6rem;
     font-weight: 500;
-    color: #2c3e50;
+    color: var(--primary-color);
     font-size: 0.95rem;
 }
 
@@ -124,6 +149,7 @@
     position: absolute;
     left: 1rem;
     font-size: 1.1rem;
+    color: var(--secondary-color);
     z-index: 2;
 }
 
@@ -131,20 +157,21 @@
 .auth-form .form-group select {
     width: 100%;
     padding: 0.9rem 1rem 0.9rem 3rem;
-    border: 2px solid #e1e5e9;
-    border-radius: 10px;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
     font-size: 1rem;
     transition: all 0.2s ease;
-    background: #f8f9fa;
+    background: var(--section-background);
     font-family: inherit;
+    color: var(--primary-color);
 }
 
 .auth-form .form-group input:focus,
 .auth-form .form-group select:focus {
     outline: none;
-    border-color: #3498db;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    border-color: var(--accent-color);
+    background: var(--card-background);
+    box-shadow: 0 0 0 3px rgba(123, 184, 232, 0.1);
 }
 
 .role-description {
@@ -152,66 +179,103 @@
 }
 
 .role-info {
-    padding: 0.8rem;
-    border-radius: 8px;
-    background: #f8f9fa;
-    border-left: 4px solid #3498db;
+    padding: 1rem;
+    border-radius: 12px;
+    background: var(--section-background);
+    border-left: 4px solid var(--accent-color);
     font-size: 0.9rem;
-    color: #5a6c7d;
+    color: var(--secondary-color);
     display: none;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.role-info:last-child {
+    margin-bottom: 0;
 }
 
 .role-info.active {
-    display: block;
+    display: flex;
+}
+
+.role-info i {
+    color: var(--accent-color);
+    font-size: 1.1rem;
+}
+
+.role-info strong {
+    color: var(--primary-color);
 }
 
 .auth-btn-primary {
     width: 100%;
-    background: linear-gradient(135deg, #3498db, #2980b9);
+    background: var(--accent-color);
     color: white;
     border: none;
     padding: 1rem 2rem;
-    border-radius: 10px;
+    border-radius: 12px;
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin: 1.5rem 0;
+    margin: 2rem 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
 }
 
 .auth-btn-primary:hover {
+    background: var(--accent-hover);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+    box-shadow: 0 8px 25px rgba(123, 184, 232, 0.3);
 }
 
 .auth-links {
     text-align: center;
-    margin-top: 1.5rem;
 }
 
 .auth-links p {
-    color: #7f8c8d;
+    color: var(--secondary-color);
     margin: 0;
 }
 
 .auth-link {
-    color: #3498db;
+    color: var(--accent-color);
     text-decoration: none;
     font-weight: 500;
+    transition: color 0.3s ease;
 }
 
 .auth-link:hover {
+    color: var(--accent-hover);
     text-decoration: underline;
 }
 
 @media (max-width: 768px) {
-    .auth-container {
-        margin: 1rem auto;
-        padding: 0 0.5rem;
+    .auth-page {
+        padding: 1rem 0.5rem;
     }
 
     .auth-card {
+        padding: 2.5rem 2rem;
+    }
+
+    .auth-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-card {
         padding: 2rem 1.5rem;
+    }
+
+    .auth-header h1 {
+        font-size: 1.5rem;
     }
 }
 </style>
@@ -222,10 +286,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const roleInfos = document.querySelectorAll('.role-info');
 
     roleSelect.addEventListener('change', function() {
-        // Скрываем все описания
         roleInfos.forEach(info => info.classList.remove('active'));
 
-        // Показываем выбранное описание
         const selectedRole = this.value;
         if (selectedRole) {
             const selectedInfo = document.querySelector(`.role-info[data-role="${selectedRole}"]`);
@@ -235,7 +297,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Показываем описание при фокусе
     roleSelect.addEventListener('focus', function() {
         if (this.value) {
             const selectedInfo = document.querySelector(`.role-info[data-role="${this.value}"]`);
