@@ -13,40 +13,126 @@ if not app.secret_key:
 from urllib.parse import urlparse
 
 
+from urllib.parse import urlparse
+import os
+from dotenv import load_dotenv
+
+# Загружаем переменные окружения из .env файла
+load_dotenv()
+
+# SQL для создания таблиц
+INIT_SQL = """
+DROP TABLE IF EXISTS task_info CASCADE;
+DROP TABLE IF EXISTS news CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+
+-- Создание таблицы пользователей
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(20) DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Создание таблицы новостей/задач
+CREATE TABLE news (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    preview TEXT,
+    author_id INTEGER REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Создание таблицы информации о задачах
+CREATE TABLE task_info (
+    id SERIAL PRIMARY KEY,
+    news_id INTEGER REFERENCES news(id) ON DELETE CASCADE,
+    assigned_by INTEGER REFERENCES users(id),
+    assigned_to INTEGER REFERENCES users(id),
+    deadline TIMESTAMP,
+    status VARCHAR(20) DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+"""
+
+
+def init_database(conn):
+    """Инициализация базы данных: создание таблиц, если их нет"""
+    try:
+        cur = conn.cursor()
+
+        # Проверяем существование таблицы users (как маркер инициализации)
+        cur.execute("""
+            SELECT EXISTS (
+                SELECT FROM information_schema.tables 
+                WHERE table_name = 'users'
+            );
+        """)
+        users_table_exists = cur.fetchone()[0]
+
+        if not users_table_exists:
+            print("🔄 База данных пустая. Создаю таблицы...")
+            # Выполняем все SQL команды для создания таблиц
+            cur.execute(INIT_SQL)
+            conn.commit()
+            print("✅ Таблицы успешно созданы!")
+
+            # Создаем администратора по умолчанию (опционально)
+            try:
+                admin_password = generate_password_hash("admin123")
+                cur.execute(
+                    "INSERT INTO users (username, password_hash, role) VALUES (%s, %s, %s)",
+                    ("admin", admin_password, "team_leader")
+                )
+                conn.commit()
+                print("✅ Администратор по умолчанию создан (логин: admin, пароль: admin123)")
+            except Exception as e:
+                print(f"⚠️ Не удалось создать администратора: {e}")
+                conn.rollback()
+        else:
+            print("✅ Таблицы уже существуют")
+
+        cur.close()
+    except Exception as e:
+        print(f"❌ Ошибка при инициализации базы данных: {e}")
+        conn.rollback()
+
+
 def get_db_connection():
     try:
         database_url = os.environ.get('DATABASE_URL')
 
         print(f"🔍 DEBUG: DATABASE_URL = {database_url}")
 
-        if not database_url:
+        # Если есть DATABASE_URL (для Render), используем его
+        if database_url:
+            # Исправляем URL если нужно
+            if database_url.startswith('postgres://'):
+                database_url = database_url.replace('postgres://', 'postgresql://', 1)
+                print("🔍 DEBUG: Fixed URL protocol")
+
+            # Подключаемся с SSL
+            conn = psycopg2.connect(
+                dsn=database_url,
+                sslmode='require'
+            )
+            print("✅ Connected to Render PostgreSQL successfully!")
+        else:
             # Локальная разработка
             conn = psycopg2.connect(
-                host=os.environ["host"],
-                user=os.environ["user"],
-                password=os.environ["password"],
-                port=os.environ["port"],
-                dbname=os.environ["dbname"],
+                host=os.environ.get("DB_HOST", "localhost"),
+                user=os.environ.get("DB_USER", "postgres"),
+                password=os.environ.get("DB_PASSWORD", ""),
+                port=os.environ.get("DB_PORT", "5432"),
+                dbname=os.environ.get("DB_NAME", "postgres"),
                 client_encoding='utf-8'
             )
             print("✅ Connected to local database")
-            return conn
 
-        # Исправляем URL если нужно
-        if database_url.startswith('postgres://'):
-            database_url = database_url.replace('postgres://', 'postgresql://', 1)
-            print("🔍 DEBUG: Fixed URL protocol")
+        # Инициализируем базу данных (создаем таблицы, если их нет)
+        init_database(conn)
 
-        # Парсим URL для проверки
-        parsed_url = urlparse(database_url)
-        print(f"🔍 DEBUG: Database name = {parsed_url.path[1:]}")  # Убираем первый /
-
-        # Подключаемся с SSL
-        conn = psycopg2.connect(
-            dsn=database_url,
-            sslmode='require'
-        )
-        print("✅ Connected to Render PostgreSQL successfully!")
         return conn
 
     except psycopg2.OperationalError as e:
