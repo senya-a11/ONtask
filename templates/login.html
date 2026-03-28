@@ -3,21 +3,26 @@
 {% block title %}Вход в систему{% endblock %}
 
 {% block content %}
-<div class="login-container">
-    <div class="login-wrapper">
+<div class="login-page">
+    <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <div class="logo">TeamFlow</div>
+                <div class="logo">
+                    <i class="fas fa-wave-square"></i>
+                    TeamFlow
+                </div>
                 <h1>С возвращением</h1>
                 <p>Войдите в свой аккаунт</p>
             </div>
 
-            <!-- Сообщения об ошибках -->
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     <div class="flash-messages">
                         {% for category, message in messages %}
-                            <div class="flash-message {{ category }}">{{ message }}</div>
+                            <div class="flash-message {{ category }}">
+                                <i class="fas {% if category == 'error' %}fa-exclamation-circle{% else %}fa-check-circle{% endif %}"></i>
+                                {{ message }}
+                            </div>
                         {% endfor %}
                     </div>
                 {% endif %}
@@ -25,18 +30,18 @@
 
             <form method="post" class="login-form">
                 <div class="input-group">
-                    <input type="text" id="username" name="username" required value="{{ request.form.username if request.form }}">
-                    <label for="username">Имя пользователя</label>
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" id="username" name="username" required value="{{ request.form.username if request.form }}" placeholder="Имя пользователя">
                 </div>
 
                 <div class="input-group">
-                    <input type="password" id="password" name="password" required>
-                    <label for="password">Пароль</label>
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="password" name="password" required placeholder="Пароль">
                 </div>
 
                 <button type="submit" class="login-btn">
                     <span class="btn-text">Войти</span>
-                    <span class="btn-icon">→</span>
+                    <i class="fas fa-arrow-right btn-icon"></i>
                 </button>
             </form>
 
@@ -48,32 +53,26 @@
 </div>
 
 <style>
-.login-container {
+.login-page {
     min-height: 100vh;
+    background: var(--section-background);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 1rem;
-    width: 100%;
-    margin: 0;
+    padding: 2rem 1rem;
 }
 
-.login-wrapper {
+.login-container {
     width: 100%;
-    max-width: 1200px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    max-width: 400px;
 }
 
 .login-card {
-    background: white;
+    background: var(--card-background);
     border-radius: 20px;
     padding: 3rem 2.5rem;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-    width: 100%;
-    max-width: 400px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
 }
@@ -85,7 +84,7 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #667eea, #764ba2);
+    background: var(--accent-color);
 }
 
 .login-header {
@@ -96,19 +95,23 @@
 .logo {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #667eea;
-    margin-bottom: 1rem;
+    color: var(--accent-color);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .login-header h1 {
     font-size: 1.75rem;
     font-weight: 600;
-    color: #2d3748;
+    color: var(--primary-color);
     margin: 0 0 0.5rem 0;
 }
 
 .login-header p {
-    color: #718096;
+    color: var(--secondary-color);
     margin: 0;
     font-size: 0.95rem;
 }
@@ -122,41 +125,41 @@
     margin-bottom: 1.5rem;
 }
 
+.input-group .input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--secondary-color);
+    font-size: 1.1rem;
+    z-index: 2;
+}
+
 .input-group input {
     width: 100%;
-    padding: 1rem 0;
-    border: none;
-    border-bottom: 2px solid #e2e8f0;
+    padding: 1rem 1rem 1rem 3rem;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
     font-size: 1rem;
-    background: transparent;
+    background: var(--section-background);
     transition: all 0.3s ease;
     outline: none;
+    color: var(--primary-color);
+}
+
+.input-group input::placeholder {
+    color: var(--secondary-color);
 }
 
 .input-group input:focus {
-    border-bottom-color: #667eea;
-}
-
-.input-group input:focus + label,
-.input-group input:valid + label {
-    transform: translateY(-1.5rem) scale(0.85);
-    color: #667eea;
-}
-
-.input-group label {
-    position: absolute;
-    top: 1rem;
-    left: 0;
-    font-size: 1rem;
-    color: #a0aec0;
-    pointer-events: none;
-    transition: all 0.3s ease;
-    transform-origin: left top;
+    border-color: var(--accent-color);
+    background: var(--card-background);
+    box-shadow: 0 0 0 3px rgba(123, 184, 232, 0.1);
 }
 
 .login-btn {
     width: 100%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: var(--accent-color);
     color: white;
     border: none;
     padding: 1rem 2rem;
@@ -172,8 +175,9 @@
 }
 
 .login-btn:hover {
+    background: var(--accent-hover);
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 8px 25px rgba(123, 184, 232, 0.3);
 }
 
 .btn-text {
@@ -181,7 +185,7 @@
 }
 
 .btn-icon {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     transition: transform 0.3s ease;
 }
 
@@ -192,31 +196,64 @@
 .login-footer {
     text-align: center;
     padding-top: 1.5rem;
-    border-top: 1px solid #f7fafc;
+    border-top: 1px solid var(--border-color);
 }
 
 .login-footer p {
-    color: #718096;
+    color: var(--secondary-color);
     margin: 0;
     font-size: 0.9rem;
 }
 
 .link {
-    color: #667eea;
+    color: var(--accent-color);
     text-decoration: none;
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
 .link:hover {
-    color: #764ba2;
+    color: var(--accent-hover);
+    text-decoration: underline;
 }
 
-/* Анимации */
+.flash-messages {
+    margin-bottom: 1.5rem;
+}
+
+.flash-message {
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.flash-message.error {
+    background: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+}
+
+.flash-message.success {
+    background: #F0FDF4;
+    color: #16A34A;
+    border: 1px solid #BBF7D0;
+}
+
+.flash-message.info {
+    background: #EFF6FF;
+    color: #2563EB;
+    border: 1px solid #BFDBFE;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(-10px);
     }
     to {
         opacity: 1;
@@ -241,45 +278,13 @@
     animation-delay: 0.2s;
 }
 
-/* Сообщения об ошибках */
-.flash-messages {
-    margin-bottom: 1.5rem;
-}
-
-.flash-message {
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-    animation: fadeIn 0.3s ease;
-}
-
-.flash-message.error {
-    background: #fed7d7;
-    color: #c53030;
-    border: 1px solid #feb2b2;
-}
-
-.flash-message.success {
-    background: #c6f6d5;
-    color: #276749;
-    border: 1px solid #9ae6b4;
-}
-
-.flash-message.info {
-    background: #bee3f8;
-    color: #2c5aa0;
-    border: 1px solid #90cdf4;
-}
-
-/* Адаптивность */
 @media (max-width: 480px) {
-    .login-container {
-        padding: 0.5rem;
+    .login-page {
+        padding: 1rem 0.5rem;
     }
 
     .login-card {
-        padding: 2rem 1.5rem;
+        padding: 2.5rem 2rem;
     }
 
     .login-header h1 {
@@ -290,29 +295,8 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Автофокус на первое поле
     const usernameInput = document.getElementById('username');
     usernameInput.focus();
-
-    // Если есть значение в поле username, активируем лейбл
-    if (usernameInput.value) {
-        usernameInput.nextElementSibling.style.transform = 'translateY(-1.5rem) scale(0.85)';
-        usernameInput.nextElementSibling.style.color = '#667eea';
-    }
-
-    // Добавляем обработчик для сохранения значения при обновлении страницы
-    const inputs = document.querySelectorAll('input');
-    inputs.forEach(input => {
-        input.addEventListener('input', function() {
-            if (this.value) {
-                this.nextElementSibling.style.transform = 'translateY(-1.5rem) scale(0.85)';
-                this.nextElementSibling.style.color = '#667eea';
-            } else {
-                this.nextElementSibling.style.transform = 'none';
-                this.nextElementSibling.style.color = '#a0aec0';
-            }
-        });
-    });
 });
 </script>
 {% endblock %}

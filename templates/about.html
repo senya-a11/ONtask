@@ -1,9 +1,207 @@
-{%extends "base.html" %}
+{% extends "base.html" %}
 
-{% block title %}
-About us
-{% endblock %}
+{% block title %}О проекте — TeamFlow{% endblock %}
 
 {% block content %}
-<h1>This is the main page where will be some info</h1>
+<div class="about-page">
+    <div class="about-container">
+
+        <!-- Hero-секция -->
+        <div class="about-hero">
+            <h1>О проекте TeamFlow</h1>
+            <p class="about-subtitle">
+                Веб-платформа для управления задачами в командах — простая, понятная, без лишнего.
+            </p>
+        </div>
+
+        <!-- Проблема и решение -->
+        <div class="about-section">
+            <h2>Зачем это нужно</h2>
+            <p>
+                Когда команда управляет задачами через электронную почту, мессенджеры или таблицы —
+                задачи теряются, дедлайны пропускаются, а кто за что отвечает становится непонятно.
+                TeamFlow решает эту проблему: одно место для всех задач, чёткие роли, визуальный контроль статусов.
+            </p>
+        </div>
+
+        <!-- Возможности -->
+        <div class="about-section">
+            <h2>Что умеет платформа</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-users-cog"></i></div>
+                    <h3>Система ролей</h3>
+                    <p>Team Leader создаёт и распределяет задачи. Crew видит и выполняет только свои.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-tasks"></i></div>
+                    <h3>Управление задачами</h3>
+                    <p>Название, описание, исполнитель, дедлайн — вся нужная информация в одном месте.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-flag"></i></div>
+                    <h3>Контроль дедлайнов</h3>
+                    <p>Просроченные задачи визуально выделяются — ничего не потеряется и не забудется.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-lock"></i></div>
+                    <h3>Безопасность</h3>
+                    <p>Пароли хранятся в виде хешей. SQL-запросы параметризованы — защита от инъекций.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Стек технологий -->
+        <div class="about-section">
+            <h2>Технологии</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <span class="tech-label">Backend</span>
+                    <span class="tech-value">Python · Flask · psycopg2</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-label">Frontend</span>
+                    <span class="tech-value">HTML · CSS · Jinja2</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-label">База данных</span>
+                    <span class="tech-value">PostgreSQL</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-label">Хостинг</span>
+                    <span class="tech-value">Render</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Автор -->
+        <div class="about-section">
+            <h2>Автор</h2>
+            <p>
+                Проект разработан учеником 11 «Г» класса ГБОУ Школа № 1358 Шуклиным Арсением
+                в рамках учебно-исследовательской работы по информационным технологиям, 2026 г.
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<style>
+.about-page {
+    background: var(--section-background);
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.about-container {
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.about-hero {
+    text-align: center;
+    padding: 3rem 0 2.5rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 2.5rem;
+}
+
+.about-hero h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.about-subtitle {
+    font-size: 1.15rem;
+    color: var(--secondary-color);
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.about-section {
+    margin-bottom: 2.5rem;
+}
+
+.about-section h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.about-section p {
+    color: var(--secondary-color);
+    line-height: 1.7;
+    font-size: 1rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.25rem;
+}
+
+.feature-card {
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.feature-icon {
+    font-size: 1.5rem;
+    color: var(--accent-color);
+    margin-bottom: 0.75rem;
+}
+
+.feature-card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+}
+
+.tech-item {
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.tech-label {
+    font-size: 0.8rem;
+    color: var(--secondary-color);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tech-value {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+@media (max-width: 600px) {
+    .about-hero h1 { font-size: 1.8rem; }
+    .features-grid { grid-template-columns: 1fr; }
+}
+</style>
 {% endblock %}
